@@ -1,0 +1,49 @@
+#apt update not working in kali
+Error:
+
+Get:1 http://kali.download/kali kali-rolling InRelease [30.6 kB]
+Err:1 http://kali.download/kali kali-rolling InRelease
+  The following signatures were invalid: EXPKEYSIG ED444FF07D8D0BF6 Kali Linux Repository <devel@kali.org>
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+16 packages can be upgraded. Run 'apt list --upgradable' to see them.
+W: An error occurred during the signature verification. The repository is not updated and the previous index files will be used. GPG error: http://kali.download/kali kali-rolling InRelease: The following signatures were invalid: EXPKEYSIG ED444FF07D8D0BF6 Kali Linux Repository <devel@kali.org>
+W: Failed to fetch http://http.kali.org/kali/dists/kali-rolling/InRelease  The following signatures were invalid: EXPKEYSIG ED444FF07D8D0BF6 Kali Linux Repository <devel@kali.org>
+W: Some index files failed to download. They have been ignored, or old ones used instead.
+
+
+
+Solutions:
+
+1. echo "deb http://http.kali.org/kali kali-rolling main non-free contrib" |sudo tee /etc/apt/sources.list 
+
+2. nano /etc/apt/sources.list
+
+deb http://http.kali.org/kali kali-rolling main non-free contrib
+deb-src http://http.kali.org/kali kali-rolling main non-free contrib
+
+3. apt-get update
+
+Now check the error message 
+	The following signatures were invalid: EXPKEYSIG ED444FF07D8D0BF6 Kali Linux Repository <devel@kali.org>
+
+Copy the error "ED444FF07D8D0BF6"
+
+4. Run this command:
+gpg --keyserver hkp://keys.gnupg.net --recv-key ED444FF07D8D0BF6
+
+5. gpg -a --export ED444FF07D8D0BF6 | apt-key add -
+
+
+
+Note: If you face the error at 4 point which shows:
+gpg: keyserver receive failed: Server indicated a failure
+
+then apply the following commands:
+
+6. sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ED
+7. apt-get update
+8. apt-get upgrade
+
+
